@@ -4,6 +4,7 @@ import { getProductById, getStoreProducts } from "@/lib/store"
 import { ProductDetail } from "@/components/product-detail"
 import { Footer } from "@/components/footer"
 
+
 /* ------------------------------------------------------------------ */
 /*  Allow any product ID at runtime (not only build-time known IDs)    */
 /* ------------------------------------------------------------------ */
@@ -31,6 +32,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params
   const product = await getProductById(id)
+
+  
 
   if (!product) {
     return { title: "Producto no encontrado | Jlo's Cosmetics" }

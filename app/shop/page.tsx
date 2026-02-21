@@ -52,6 +52,9 @@ function ProductGrid({ products }: { products: Array<{
 async function ShopContent() {
   const { products, error } = await getProducts()
 
+  console.log("STORE RAW DATA:")
+  console.log(JSON.stringify(products, null, 2))
+
   if (error) {
     return (
       <Alert variant="destructive" className="mb-6">

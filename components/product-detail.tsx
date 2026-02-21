@@ -91,8 +91,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const [copied, setCopied] = useState(false)
 
   const isOutOfStock = product.agotado === true
-  const rating = 4.5 // placeholder until reviews API exists
-  const reviewCount = 24
+  const rating = 4.5 // placeholder until reviews API exists  
+  const reviewCount: number = 24
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href)
@@ -437,12 +437,12 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 <div>
                   <StarRating rating={rating} />
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Basado en {reviewCount} resenas
+                    Basado en {reviewCount} reseñas
                   </p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                Las resenas de clientes verificados se mostraran aqui
+                Las reseñas de clientes verificados se mostraran aqui
                 proximamente.
               </p>
             </div>
