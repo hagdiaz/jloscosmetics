@@ -8,10 +8,14 @@ interface ExternalProduct {
   agotado?: boolean
   category?: string
   stock?: number
+  reviewsCount?: number
+  rating?: number
   [key: string]: unknown
 }
 
 export interface StoreProduct {
+  reviewsCount: number
+  rating: number
   id: string | number
   name: string
   price: number

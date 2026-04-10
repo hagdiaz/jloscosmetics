@@ -9,7 +9,10 @@ interface ProductCardProps {
   price: number
   description?: string
   image?: string
-  agotado?: boolean
+  isOutOfStock?: boolean
+  stock?: number
+  rating: number
+  reviewsCount: number
 }
 
 export const ProductCard = ({
@@ -18,14 +21,20 @@ export const ProductCard = ({
   price,
   description,
   image,
-  agotado = false,
+  stock,
 }: ProductCardProps) => {
+
+  const agotado = (stock ?? 0) <= 0 // 👈 SOURCE OF TRUTH
+
   return (
     <Link href={`/shop/${id}`}>
-      <Card className={`group h-full overflow-hidden transition-all relative ${agotado
-          ? 'opacity-75 hover:shadow-md'
-          : 'hover:shadow-lg hover:border-primary/50'
-        }`}>
+      <Card
+        className={`group h-full overflow-hidden transition-all relative ${
+          agotado
+            ? "opacity-75 hover:shadow-md"
+            : "hover:shadow-lg hover:border-primary/50"
+        }`}
+      >
         {/* Imagen */}
         <div className="aspect-square overflow-hidden bg-muted relative">
           <Image
@@ -33,9 +42,9 @@ export const ProductCard = ({
             alt={name || "Producto"}
             width={300}
             height={300}
-            className={`h-full w-full object-cover transition-transform duration-300 ${agotado ? 'grayscale' : 'group-hover:scale-105'
-              }`}
-            priority={false}
+            className={`h-full w-full object-cover transition-transform duration-300 ${
+              agotado ? "grayscale" : "group-hover:scale-105"
+            }`}
           />
 
           {/* Overlay oscuro cuando está agotado */}
@@ -47,7 +56,7 @@ export const ProductCard = ({
             </div>
           )}
 
-          {/* Etiqueta Agotado en esquina (alternativa de posicionamiento) */}
+          {/* Badge */}
           {agotado && (
             <Badge
               variant="destructive"
@@ -59,10 +68,19 @@ export const ProductCard = ({
         </div>
 
         {/* Contenido */}
-        <div className={`flex flex-col gap-3 p-4 sm:p-5 ${agotado ? 'opacity-70' : ''}`}>
+        <div
+          className={`flex flex-col gap-3 p-4 sm:p-5 ${
+            agotado ? "opacity-70" : ""
+          }`}
+        >
           {/* Nombre */}
-          <h3 className={`font-medium text-base leading-tight line-clamp-2 transition-colors ${agotado ? 'text-muted-foreground' : 'group-hover:text-primary'
-            }`}>
+          <h3
+            className={`font-medium text-base leading-tight line-clamp-2 transition-colors ${
+              agotado
+                ? "text-muted-foreground"
+                : "group-hover:text-primary"
+            }`}
+          >
             {name}
           </h3>
 
@@ -75,10 +93,23 @@ export const ProductCard = ({
 
           {/* Precio */}
           <div className="mt-auto pt-2 border-t border-border">
-            <p className={`text-lg font-semibold ${agotado ? 'line-through text-muted-foreground' : ''}`}>
-              ${typeof price === 'number' ? Math.round(price) : price}
+            <p
+              className={`text-lg font-semibold ${
+                agotado ? "line-through text-muted-foreground" : ""
+              }`}
+            >
+              ${typeof price === "number" ? Math.round(price) : price}
             </p>
           </div>
+
+          {/* Stock label (NUEVO) */}
+          <p
+            className={`text-xs font-medium ${
+              agotado ? "text-red-500" : "text-green-600"
+            }`}
+          >
+            {agotado ? "Agotado" : "En stock"}
+          </p>
         </div>
       </Card>
     </Link>

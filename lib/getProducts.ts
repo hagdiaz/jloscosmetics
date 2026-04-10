@@ -1,20 +1,50 @@
-import { getStoreProducts, type StoreProduct } from '@/lib/store'
+'use server'
 
-export type Product = StoreProduct
+interface Product {
+  id: number
+  name: string
+  price: number
+  description: string
+  image: string
+  stock: number
+  reviewsCount: number
+  rating: number
+}
 
-/**
- * Fetches products directly from the shared store logic.
- * No internal fetch calls — used by Server Components like /shop.
- */
+import { normalizeProduct, StoreProduct } from "./normalizeProducts"
+
 export async function getProducts(): Promise<{
-  products: Product[]
+  products: StoreProduct[]
   error?: string
 }> {
-  const result = await getStoreProducts()
+  try {
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000"
 
-  if (!result.success) {
-    return { products: [], error: result.message ?? 'Unknown error' }
+    const response = await fetch(`${baseUrl}/api/store`, {
+      cache: "no-store",
+    })
+
+    const data = await response.json()
+
+    if (!data.success) {
+      return {
+        products: [],
+        error: data.message || "Error fetching products",
+      }
+    }
+
+    const rawProducts = Array.isArray(data.data) ? data.data : []
+
+    const products = rawProducts.map(normalizeProduct)
+
+    return { products }
+
+  } catch (error) {
+    return {
+      products: [],
+      error: error instanceof Error ? error.message : "Unknown error",
+    }
   }
-
-  return { products: result.data }
 }

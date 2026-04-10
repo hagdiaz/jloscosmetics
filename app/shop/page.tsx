@@ -5,10 +5,24 @@ import { Footer } from "@/components/footer"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
+
+interface Product {
+  id: number
+  name: string
+  price: number
+  description?: string
+  image?: string
+  stock: number // 👈 ESTO FALTABA
+  reviewsCount: number
+  rating: number
+}
 /**
  * ProductGrid - Muestra la grilla de productos
  */
 function ProductGrid({ products }: { products: Array<{
+  rating: number
+  reviewsCount: number
+  stock: number
   id: string | number
   name: string
   price: number
@@ -37,9 +51,11 @@ function ProductGrid({ products }: { products: Array<{
           id={product.id}
           name={product.name}
           price={product.price}
-          description={product.description}
           image={product.image}
-          agotado={product.agotado}
+          description={product.description}
+          stock={product.stock} // 👈 CRÍTICO
+          rating={product.rating}
+          reviewsCount={product.reviewsCount}
         />
       ))}
     </div>

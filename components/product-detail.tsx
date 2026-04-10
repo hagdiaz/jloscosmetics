@@ -90,11 +90,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1)
   const [copied, setCopied] = useState(false)
 
-  const isOutOfStock = product.agotado === true
-  const rating = 4.5 // placeholder until reviews API exists  
-  const reviewCount: number = 24
+  const isOutOfStock = !product.stock || product.stock <= 0
 
-  const handleCopyLink = () => {
+// Datos reales (si vienen del endpoint)
+  const rating = product.rating ?? 0
+  const reviewCount = product.reviewsCount ?? 0
+
+  function handleCopyLink() {
     navigator.clipboard.writeText(window.location.href)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -171,10 +173,18 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
           {/* Rating */}
           <div className="mb-4 flex items-center gap-2">
-            <StarRating rating={rating} />
-            <span className="text-sm text-muted-foreground">
-              {rating} ({reviewCount} {reviewCount === 1 ? "resena" : "resenas"})
-            </span>
+            {reviewCount > 0 ? (
+  <div className="mb-4 flex items-center gap-2">
+     <StarRating rating={rating} />
+        <span className="text-sm text-muted-foreground">
+        {rating} ({reviewCount} reseñas)
+        </span>
+  </div>
+) : (
+  <p className="mb-4 text-sm text-muted-foreground">
+    Sin reseñas aún
+  </p>
+)}
           </div>
 
           {/* Price + Stock */}
@@ -186,15 +196,12 @@ export function ProductDetail({ product }: ProductDetailProps) {
             </span>
 
             {isOutOfStock ? (
-              <Badge variant="destructive" className="text-xs">
-                Agotado
-              </Badge>
-            ) : (
-              <Badge
-                variant="outline"
-                className="border-emerald-600/30 bg-emerald-50 text-emerald-700 text-xs"
-              >
-                En stock
+              <Badge variant="destructive">Agotado</Badge>
+                ) : (
+              <Badge className="bg-emerald-100 text-emerald-700 border-emerald-300">
+                {product.stock && product.stock <= 5
+                ? `Quedan ${product.stock}`
+                : "En stock"}
               </Badge>
             )}
           </div>
